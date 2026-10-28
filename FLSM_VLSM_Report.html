@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>FLSM vs VLSM | Network Design Report</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f1f5f9;
+    color: #243247;
+    line-height: 1.6;
+}
+
+header {
+    background: linear-gradient(135deg, #173b63, #187e91);
+    color: white;
+    padding: 42px 24px;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: auto;
+}
+
+header h1 {
+    font-size: 32px;
+    margin: 0 0 8px;
+}
+
+header p {
+    margin: 4px 0;
+    color: #e0f2fe;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 28px auto;
+    padding: 0 20px 40px;
+}
+
+.section {
+    background: white;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 16px rgba(15, 41, 68, 0.07);
+}
+
+.section h2 {
+    color: #173b63;
+    margin-top: 0;
+    font-size: 22px;
+}
+
+.section h3 {
+    color: #187e91;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.card {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    border-top: 4px solid #187e91;
+    box-shadow: 0 4px 16px rgba(15, 41, 68, 0.06);
+}
+
+.card .label {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.card .value {
+    display: block;
+    font-size: 27px;
+    font-weight: 750;
+    color: #173b63;
+    margin: 8px 0 3px;
+}
+
+.card small {
+    color: #64748b;
+}
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 850px;
+    font-size: 13px;
+}
+
+thead {
+    background: #173b63;
+    color: white;
+}
+
+th, td {
+    text-align: left;
+    padding: 13px 12px;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+tbody tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+tbody tr:hover {
+    background: #eaf6f8;
+}
+
+code {
+    background: #e8f2f8;
+    color: #155e75;
+    padding: 4px 6px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.saved {
+    color: #087f5b;
+    font-weight: bold;
+}
+
+.status {
+    display: inline-block;
+    background: #dcfce7;
+    color: #166534;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 13px;
+    margin: 4px 6px 4px 0;
+}
+
+.bar-row {
+    margin: 18px 0;
+}
+
+.bar-label {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.bar-bg {
+    height: 17px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.bar {
+    height: 100%;
+    border-radius: 10px;
+}
+
+.flsm-bar {
+    background: #64748b;
+}
+
+.vlsm-bar {
+    background: #0d9488;
+}
+
+.note {
+    border-left: 4px solid #187e91;
+    background: #eff9fb;
+    padding: 14px 16px;
+    border-radius: 6px;
+}
+
+footer {
+    text-align: center;
+    color: #64748b;
+    padding: 24px;
+    font-size: 13px;
+}
+
+@media (max-width: 850px) {
+    .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    header h1 {
+        font-size: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .section {
+        padding: 16px;
+    }
+}
+
+@media print {
+    body {
+        background: white;
+    }
+
+    .section, .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        break-inside: avoid;
+    }
+
+    header {
+        background: #173b63;
+        print-color-adjust: exact;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-content">
+        <h1>FLSM vs VLSM</h1>
+        <p>IPv4 Subnet Allocation & Address Utilisation Analysis</p>
+        <p>Computer Networks Project | ID: 25CS047</p>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="cards">
+        <div class="card">
+            <span class="label">FLSM Allocation</span>
+            <span class="value">640</span>
+            <small>Addresses allocated</small>
+        </div>
+
+        <div class="card">
+            <span class="label">VLSM Allocation</span>
+            <span class="value">248</span>
+            <small>Addresses allocated</small>
+        </div>
+
+        <div class="card">
+            <span class="label">Addresses Saved</span>
+            <span class="value">392</span>
+            <small>Fewer addresses allocated</small>
+        </div>
+
+        <div class="card">
+            <span class="label">Address Reduction</span>
+            <span class="value">61.25%</span>
+            <small>Compared with FLSM</small>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>1. Project Overview</h2>
+        <p>
+            This project compares Fixed Length Subnet Masking (FLSM)
+            and Variable Length Subnet Masking (VLSM) for five
+            departments requiring 70, 35, 18, 9 and 5 host addresses.
+        </p>
+
+        <div class="note">
+            <strong>Objective:</strong> Compare address allocation,
+            usable host capacity and address utilisation while
+            validating subnet boundaries and preventing overlaps.
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>2. FLSM Subnet Allocation</h2>
+        <p>
+            Parent network: <code>192.168.0.0/22</code>.
+            Every department receives a /25 subnet.
+        </p>
+
+        <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Department</th>
+                    <th>Required Hosts</th>
+                    <th>Network / CIDR</th>
+                    <th>Subnet Mask</th>
+                    <th>Usable IP Range</th>
+                    <th>Broadcast</th>
+                    <th>Allocated</th>
+                    <th>Usable</th>
+                    <th>Unused Usable</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+        <tr>
+            <td>Department 1</td>
+            <td>70</td>
+            <td><code>192.168.0.0/25</code></td>
+            <td><code>255.255.255.128</code></td>
+            <td>192.168.0.1 – 192.168.0.126</td>
+            <td>192.168.0.127</td>
+            <td>128</td>
+            <td>126</td>
+            <td>56</td>
+        </tr>
+        
+        <tr>
+            <td>Department 2</td>
+            <td>35</td>
+            <td><code>192.168.0.128/25</code></td>
+            <td><code>255.255.255.128</code></td>
+            <td>192.168.0.129 – 192.168.0.254</td>
+            <td>192.168.0.255</td>
+            <td>128</td>
+            <td>126</td>
+            <td>91</td>
+        </tr>
+        
+        <tr>
+            <td>Department 3</td>
+            <td>18</td>
+            <td><code>192.168.1.0/25</code></td>
+            <td><code>255.255.255.128</code></td>
+            <td>192.168.1.1 – 192.168.1.126</td>
+            <td>192.168.1.127</td>
+            <td>128</td>
+            <td>126</td>
+            <td>108</td>
+        </tr>
+        
+        <tr>
+            <td>Department 4</td>
+            <td>9</td>
+            <td><code>192.168.1.128/25</code></td>
+            <td><code>255.255.255.128</code></td>
+            <td>192.168.1.129 – 192.168.1.254</td>
+            <td>192.168.1.255</td>
+            <td>128</td>
+            <td>126</td>
+            <td>117</td>
+        </tr>
+        
+        <tr>
+            <td>Department 5</td>
+            <td>5</td>
+            <td><code>192.168.2.0/25</code></td>
+            <td><code>255.255.255.128</code></td>
+            <td>192.168.2.1 – 192.168.2.126</td>
+            <td>192.168.2.127</td>
+            <td>128</td>
+            <td>126</td>
+            <td>121</td>
+        </tr>
+        
+            </tbody>
+        </table>
+        </div>
+
+        <h3>FLSM Summary</h3>
+        <p>
+            Allocated addresses: <strong>640</strong> |
+            Usable addresses: <strong>630</strong> |
+            Required hosts: <strong>137</strong> |
+            Address utilisation: <strong>21.41%</strong>
+        </p>
+    </section>
+
+    <section class="section">
+        <h2>3. VLSM Subnet Allocation</h2>
+        <p>
+            Parent network: <code>10.0.1.0/24</code>.
+            Each department receives a subnet sized for its host requirement.
+        </p>
+
+        <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Department</th>
+                    <th>Required Hosts</th>
+                    <th>Network / CIDR</th>
+                    <th>Subnet Mask</th>
+                    <th>Usable IP Range</th>
+                    <th>Broadcast</th>
+                    <th>Allocated</th>
+                    <th>Usable</th>
+                    <th>Unused Usable</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+        <tr>
+            <td>Department 1</td>
+            <td>70</td>
+            <td><code>10.0.1.0/25</code></td>
+            <td><code>255.255.255.128</code></td>
+            <td>10.0.1.1 – 10.0.1.126</td>
+            <td>10.0.1.127</td>
+            <td>128</td>
+            <td>126</td>
+            <td>56</td>
+        </tr>
+        
+        <tr>
+            <td>Department 2</td>
+            <td>35</td>
+            <td><code>10.0.1.128/26</code></td>
+            <td><code>255.255.255.192</code></td>
+            <td>10.0.1.129 – 10.0.1.190</td>
+            <td>10.0.1.191</td>
+            <td>64</td>
+            <td>62</td>
+            <td>27</td>
+        </tr>
+        
+        <tr>
+            <td>Department 3</td>
+            <td>18</td>
+            <td><code>10.0.1.192/27</code></td>
+            <td><code>255.255.255.224</code></td>
+            <td>10.0.1.193 – 10.0.1.222</td>
+            <td>10.0.1.223</td>
+            <td>32</td>
+            <td>30</td>
+            <td>12</td>
+        </tr>
+        
+        <tr>
+            <td>Department 4</td>
+            <td>9</td>
+            <td><code>10.0.1.224/28</code></td>
+            <td><code>255.255.255.240</code></td>
+            <td>10.0.1.225 – 10.0.1.238</td>
+            <td>10.0.1.239</td>
+            <td>16</td>
+            <td>14</td>
+            <td>5</td>
+        </tr>
+        
+        <tr>
+            <td>Department 5</td>
+            <td>5</td>
+            <td><code>10.0.1.240/29</code></td>
+            <td><code>255.255.255.248</code></td>
+            <td>10.0.1.241 – 10.0.1.246</td>
+            <td>10.0.1.247</td>
+            <td>8</td>
+            <td>6</td>
+            <td>1</td>
+        </tr>
+        
+            </tbody>
+        </table>
+        </div>
+
+        <h3>VLSM Summary</h3>
+        <p>
+            Allocated addresses: <strong>248</strong> |
+            Usable addresses: <strong>238</strong> |
+            Required hosts: <strong>137</strong> |
+            Address utilisation: <strong>55.24%</strong>
+        </p>
+    </section>
+
+    <section class="section">
+        <h2>4. Department-wise Comparison</h2>
+
+        <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Department</th>
+                    <th>Required Hosts</th>
+                    <th>FLSM Subnet</th>
+                    <th>FLSM Addresses</th>
+                    <th>VLSM Subnet</th>
+                    <th>VLSM Addresses</th>
+                    <th>Addresses Saved</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+        <tr>
+            <td>Department 1</td>
+            <td>70</td>
+            <td>192.168.0.0/25</td>
+            <td>128</td>
+            <td>10.0.1.0/25</td>
+            <td>128</td>
+            <td class="saved">0</td>
+        </tr>
+        
+        <tr>
+            <td>Department 2</td>
+            <td>35</td>
+            <td>192.168.0.128/25</td>
+            <td>128</td>
+            <td>10.0.1.128/26</td>
+            <td>64</td>
+            <td class="saved">64</td>
+        </tr>
+        
+        <tr>
+            <td>Department 3</td>
+            <td>18</td>
+            <td>192.168.1.0/25</td>
+            <td>128</td>
+            <td>10.0.1.192/27</td>
+            <td>32</td>
+            <td class="saved">96</td>
+        </tr>
+        
+        <tr>
+            <td>Department 4</td>
+            <td>9</td>
+            <td>192.168.1.128/25</td>
+            <td>128</td>
+            <td>10.0.1.224/28</td>
+            <td>16</td>
+            <td class="saved">112</td>
+        </tr>
+        
+        <tr>
+            <td>Department 5</td>
+            <td>5</td>
+            <td>192.168.2.0/25</td>
+            <td>128</td>
+            <td>10.0.1.240/29</td>
+            <td>8</td>
+            <td class="saved">120</td>
+        </tr>
+        
+            </tbody>
+        </table>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>5. Address Utilisation</h2>
+
+        <div class="bar-row">
+            <div class="bar-label">
+                <span>FLSM — Required hosts / allocated addresses</span>
+                <span>21.41%</span>
+            </div>
+            <div class="bar-bg">
+                <div class="bar flsm-bar"
+                     style="width: 21.41%"></div>
+            </div>
+        </div>
+
+        <div class="bar-row">
+            <div class="bar-label">
+                <span>VLSM — Required hosts / allocated addresses</span>
+                <span>55.24%</span>
+            </div>
+            <div class="bar-bg">
+                <div class="bar vlsm-bar"
+                     style="width: 55.24%"></div>
+            </div>
+        </div>
+
+        <p>
+            FLSM utilisation is based on 137 required
+            hosts divided by 640 allocated addresses.
+            VLSM uses the same required hosts but allocates smaller
+            subnet blocks to departments with fewer hosts.
+        </p>
+    </section>
+
+    <section class="section">
+        <h2>6. Validation Results</h2>
+        <p><span class="status">✓ Host Capacity Passed</span>
+           <span class="status">✓ No Overlapping Subnets</span>
+           <span class="status">✓ Subnet Boundaries Valid</span></p>
+
+        <p>
+            Every subnet has sufficient usable host addresses.
+            All allocated subnets are within their specified parent
+            network and do not overlap.
+        </p>
+    </section>
+
+    <section class="section">
+        <h2>7. Conclusion</h2>
+        <p>
+            FLSM allocates 640 addresses, while VLSM
+            allocates 248 addresses for the same
+            five department requirements. VLSM saves 392 addresses,
+            a reduction of 61.25% in allocated address
+            space. This demonstrates more efficient address allocation
+            with VLSM. These calculations alone do not establish that
+            VLSM has better network performance.
+        </p>
+    </section>
+
+</main>
+
+<footer>
+    FLSM vs VLSM | IPv4 Subnetting Project | Generated using Python
+</footer>
+
+</body>
+</html>
