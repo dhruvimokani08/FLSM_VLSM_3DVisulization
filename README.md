@@ -1,6 +1,5 @@
 # NetVista 3D: FLSM versus VLSM Campus Network Allocation
 
-**Course Code**: ITUC201 — Fundamentals of Computer Networks (Academic Year 2026–27)  
 **Student Name**: Dhruvi Mokani  
 **Student ID**: 25CS047  
 **Academic Level**: B.Tech Computer Science & Engineering (Semester 3) — Advanced Learner Group  
@@ -92,14 +91,6 @@ $$\text{Address Space Saved} = 640 - 248 = \mathbf{392 \text{ IPv4 addresses sav
 | **Campus Aggregates** | — | **137** | **Fits in single `/24`** | — | — | — | **248** | **111** | **55.24%** | **Requires `/22`** | **503** | **21.41%** |
 
 ---
-
-## 🎮 Interactive 3D WebGL Digital Twin (`netvista3d_campus_visualizer.html`)
-
-We built a **custom hardware-accelerated 3D WebGL visualizer** that runs natively in any web browser without external library dependencies:
-
-- **Launch File**: [`netvista3d_campus_visualizer.html`](file:///c:/Users/Dhruvi/Documents/antigravity/netvista3d_campus_visualizer.html)
-- **Artifact Link**: [netvista3d_campus_visualizer.html](file:///C:/Users/Dhruvi/.gemini/antigravity/brain/72131ffa-1916-4e3b-b346-2a26bf8d1f5b/netvista3d_campus_visualizer.html)
-
 ### Three Distinct 3D Visual Modes:
 1. **🏢 3D Campus Topology & Digital Twin**:
    - 3D architectural models for all 5 departments (CS Skyscraper, Admin Pavilion, Faculty Wing, Library Rotunda, Data Center Bunker).
@@ -147,40 +138,6 @@ The network uses a **Router-on-a-Stick** architecture with IEEE 802.1Q trunking 
 
 ---
 
-## 📁 Repository Structure & Deliverables
-
-```
-c:\Users\Dhruvi\Documents\antigravity\
-│
-├── README.md                              <- Master Project Documentation & Quick Start
-├── netvista3d_campus_visualizer.html     <- Interactive 3D WebGL Digital Twin & IPv4 Prism
-├── vlsm_vs_flsm_engine.py                 <- Python Mathematical Modeling & Analytical Engine
-├── generate_proforma_docx.py              <- Word Document Submission Generator
-├── ping_test_matrix.txt                   <- 25/25 ICMP Reachability Validation Matrix Log
-│
-├── Campus_Network_Full_Setup.ios          <- Complete Cisco IOS Router & Switch CLI Script
-├── Router_Campus_R1.cfg                   <- Router-on-a-Stick Sub-Interface Configuration
-├── Switch_Campus_SW1.cfg                  <- Catalyst Switch VLAN & Trunk Configuration
-│
-├── Technical_Report_25CS047.md            <- Complete Academic Technical Report (Markdown)
-├── Technical_Report_25CS047.tex           <- Publication-Grade LaTeX Source Code
-├── NetVista3D_Submission_25CS047.docx     <- Formatted University Proforma Submission Document
-├── presentation_script.md                 <- 10-12 Minute Video Defense & Viva Narration Script
-│
-├── flsm_vs_vlsm_comparison.png            <- Publication Chart: FLSM vs VLSM Space Allocation
-├── subnet_efficiency_breakdown.png        <- Publication Chart: Subnet Utilization Efficiency
-│
-├── simulation/
-│   ├── flsm_vs_vlsm_simulation.py         <- Standalone Python Network Simulation Suite
-│   ├── generate_graphs.py                 <- Matplotlib/Seaborn Chart Generator Script
-│   └── output/                            <- Generated JSON data, CSV spreadsheets, PNG charts
-│
-└── packet_tracer/
-    ├── cisco_configurations.ios           <- Packet Tracer Importable IOS Script
-    └── PACKET_TRACER_SETUP_GUIDE.md       <- Step-by-Step Topology Construction Guide
-```
-
----
 
 ## 🚀 Quick Start & Execution Guide
 
@@ -219,23 +176,9 @@ ping 192.168.10.242    REM DC_RES Server (VLAN 50)
 *(All 25 cross-department test pairs are verified with 0% packet loss in [`ping_test_matrix.txt`](file:///c:/Users/Dhruvi/Documents/antigravity/ping_test_matrix.txt))*.
 
 ---
-
-## 🎯 Viva & Examination Defense Quick Reference
-
-| Potential Viva Question | Model Answer / Mathematical Proof |
-| :--- | :--- |
-| **Why does FLSM fail for this campus?** | The largest department (CS) needs 70 hosts, dictating 7 host bits ($2^7-2=126 \ge 70$), making each subnet 128 addresses (`/25`). Five subnets of 128 require $5 \times 128 = 640$ addresses, which exceeds the 256-address capacity of `/24`. |
-| **How many addresses are saved by VLSM?** | FLSM consumes 640 addresses, while VLSM consumes $128+64+32+16+8 = 248$ addresses. The saving is exactly $640 - 248 = \mathbf{392 \text{ addresses (61.25% savings)}}$. |
-| **Why sort departments in descending order in VLSM?** | Descending order ($128 \to 64 \to 32 \to 16 \to 8$) ensures natural alignment with power-of-two CIDR boundaries, preventing fragmentation and avoiding routing overlaps. |
-| **What happens to the remaining space in `/24`?** | $256 - 248 = 8$ addresses remain in `192.168.10.248/29` (usable: `.249 - .254`), reserved for future router WAN links or a 6th department. |
-| **How do different subnets communicate physically?** | Through Router-on-a-Stick. The switch encapsulates frames with 802.1Q tags across the trunk link `Gig0/1`. The router sub-interfaces de-tag, route at Layer 3, decrement TTL, and re-tag for the destination VLAN. |
-
----
-
 ## 📜 Academic Integrity & Citation
 
 This project is submitted in fulfillment of the academic requirements for **ITUC201: Fundamentals of Computer Networks** under the guidance of the Department of Computer Science & Engineering.
 
 - **Author**: Dhruvi Mokani (Candidate ID: 25CS047)
 - **Academic Year**: 2026–27
-- **Standards**: RFC 791 (IPv4), RFC 1519 (CIDR), RFC 1918 (Private IPv4), IEEE 802.1Q (VLAN Trunking).
